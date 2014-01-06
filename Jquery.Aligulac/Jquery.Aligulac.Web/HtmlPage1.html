@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+	<link href="Content/css/css.css" rel="stylesheet" />
+	<link href="Content/css/jquery.aligulac.css" rel="stylesheet" />
+	<script src="Scripts/jquery-2.0.3.min.js"></script>
+	<script src="Scripts/jquery.aligulac/jquery.aligulac.config.js"></script>
+	<script src="Scripts/jquery.aligulac/jquery.aligulac.markup.js"></script>
+	<script src="Scripts/jquery.aligulac/jquery.aligulac.js"></script>
+</head>
+	<body>
+		<script>
+			$(document).ready(function() {
+				$(".test").aligulac({
+					mode: 'player-link-by-id',
+					parameters: {
+						showFlag: true,
+						showRace: true,
+						showTeam: true,
+						playerId: 2
+					}
+				});
+			});
+		</script>
+		<div class="test"></div>
+	</body>
+</html>
