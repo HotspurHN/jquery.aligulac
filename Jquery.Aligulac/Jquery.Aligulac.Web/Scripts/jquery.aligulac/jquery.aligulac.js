@@ -8,6 +8,7 @@ $.fn.aligulac = function (params) {
 	{
 		console.log('Aligulac plugin: Critical error! Mode isn\'t specified!');
 	}
+	domElement.html('<img class="aligulac-ajax-loading" src="' + aligulacConfig.ajaxLoading + '" alt="ajax" />');
 	params = initDefaultParameters(params);
 	switch(params.mode)
 	{
@@ -70,7 +71,7 @@ function playerLink(params, ajaxData, domElement) {
 		.replace('{aligulac-player-link}', aligulacConfig.aligulacRoot + '/players/' + ajaxData.id)
 		.replace('{aligulac-player-name}', ajaxData.tag);
 
-	domElement.html(domElement.html() + aligulacResult);
+	domElement.html(aligulacResult);
 	if (params.parameters.showPopup) {
 		var aligulacPopupContent = '';
 		var teams = '';
@@ -92,7 +93,7 @@ function playerLink(params, ajaxData, domElement) {
 			.replace('{aligulac-player-akas}', ajaxData.aliases.join(','))
 			.replace('{aligulac-player-birthday}', ajaxData.birthday)
 			.replace('{aligulac-team-name}', teams);
-		domElement.find('.aligulac-player-link').qtip({
+		domElement.find('a').qtip({
 			content: {
 				text: aligulacPopupContent,
 				position: {
@@ -103,6 +104,7 @@ function playerLink(params, ajaxData, domElement) {
 			}
 		});
 	}
+	domElement.find('.aligulac-ajax-loading').remove();
 }
 
 function playerLinkById(params, domElement) {
