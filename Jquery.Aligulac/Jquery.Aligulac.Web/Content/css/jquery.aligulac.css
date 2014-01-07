@@ -25,3 +25,23 @@
 	padding: 3px;
 }
 /* *** */
+/* predict match */
+.predict-match-score {
+	width: 300px;
+	font-size: 14px;
+}
+.predict-match-score div {
+	background-color: white;
+	width: 142px;
+	border: 1px solid black;
+	float: left;
+	color: black;
+	padding: 3px;
+}
+.predict-match-score .player1,.predict-match-score .player2, .predict-match-score .score-summary {
+	background-color: gray;
+}
+.predict-match-score  .col2 {
+	text-align: right;
+}
+/* *** */

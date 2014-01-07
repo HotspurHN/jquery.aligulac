@@ -60,26 +60,16 @@
     <Content Include="Content\css\css.css" />
     <Content Include="Content\css\jquery.aligulac.css" />
     <Content Include="HtmlPage1.html" />
-    <Content Include="packages.config" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery.aligulac\jquery.aligulac.config.js" />
     <Content Include="Scripts\jquery.aligulac\jquery.aligulac.js" />
     <Content Include="Scripts\jquery.aligulac\jquery.aligulac.markup.js" />
-    <Content Include="Web.config" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\css\images\" />

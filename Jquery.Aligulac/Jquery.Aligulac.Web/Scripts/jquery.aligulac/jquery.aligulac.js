@@ -4,19 +4,20 @@
 
 $.fn.aligulac = function (params) {
 	var domElement = this;
-	if (params.mode == null)
-	{
+	if (params.mode == null) {
 		console.log('Aligulac plugin: Critical error! Mode isn\'t specified!');
 	}
 	domElement.html('<img class="aligulac-ajax-loading" src="' + aligulacConfig.ajaxLoading + '" alt="ajax" />');
 	params = initDefaultParameters(params);
-	switch(params.mode)
-	{
+	switch (params.mode) {
 		case "player-link-by-id":
-			getPlayerLinkById(params, domElement);
+			domElement.getPlayerLinkById(params);
 			break;
 		case "player-link-by-name":
-			getPlayerLinkByName(params, domElement);
+			domElement.getPlayerLinkByName(params);
+			break;
+		case "predict-match-by-ids":
+			domElement.getPredictMatchByIds(params);
 			break;
 	}
 };
@@ -36,7 +37,14 @@ $.aligulac = function () {
 			aligulacPlayerByNameAttributeSelector += ",";
 		}
 	}
-	
+	var aligulacPredictMatchByIdAttributeSelector = '';
+	for (var j = 0; j < aligulacConfig.aligulacPredictMatchAliases.length; j++) {
+		aligulacPredictMatchByIdAttributeSelector += '[' + aligulacConfig.aligulacPredictMatchAliases[j] + ']';
+		if (j != aligulacConfig.aligulacPredictMatchAliases.length - 1) {
+			aligulacPredictMatchByIdAttributeSelector += ",";
+		}
+	}
+
 	$(aligulacPlayerByIdAttributeSelector).each(function () {
 		$(this).aligulac({
 			mode: 'player-link-by-id',
@@ -53,9 +61,21 @@ $.aligulac = function () {
 			}
 		});
 	});
+	
+	$(aligulacPredictMatchByIdAttributeSelector).each(function () {
+		var parsedAttribute = $(this).selectValuableAttribute(aligulacConfig.aligulacPredictMatchAliases).split(',');
+		$(this).aligulac({
+			mode: 'predict-match-by-ids',
+			parameters: {
+				player1: parsedAttribute[0],
+				player2: parsedAttribute[1],
+				bo: parsedAttribute[2]
+			}
+		});
+	});
 };
 
-$.fn.selectValuableAttribute = function(aliases) {
+$.fn.selectValuableAttribute = function (aliases) {
 	for (var i = 0; i < aliases.length; i++) {
 		if ($(this).attr(aliases[i]) != null) {
 			return $(this).attr(aliases[i]);
@@ -64,7 +84,8 @@ $.fn.selectValuableAttribute = function(aliases) {
 	return '';
 };
 
-function playerLink(params, ajaxData, domElement) {
+$.fn.playerLink = function(params, ajaxData) {
+	var domElement = $(this);
 	var aligulacResult = aligulacMarkup.playerLink;
 
 	var aligulacFlag = '';
@@ -101,7 +122,7 @@ function playerLink(params, ajaxData, domElement) {
 		if (ajaxData.current_teams.length > 0) {
 			teams = ajaxData.current_teams[0].team.shortname;
 		}
-		
+
 		aligulacPopupContent = aligulacMarkup.playerPopup
 			.replace('{aligulac-player-name}', ajaxData.tag)
 			.replace('{race-image}', aligulacMarkup.playerRace
@@ -120,7 +141,7 @@ function playerLink(params, ajaxData, domElement) {
 			content: {
 				text: aligulacPopupContent,
 				position: {
-					target: 'mouse', 
+					target: 'mouse',
 					adjust: { x: 5, y: 5 },
 					style: 'fixed'
 				}
@@ -128,36 +149,91 @@ function playerLink(params, ajaxData, domElement) {
 		});
 	}
 	domElement.find('.aligulac-ajax-loading').remove();
-}
+};
 
-function getPlayerLinkById(params, domElement) {
+$.fn.predictMatchTable = function (params, ajaxData) {
+	var domElement = $(this);
+	ajaxData.pla.id = params.parameters.player1;
+	ajaxData.plb.id = params.parameters.player2;
+	domElement.html(aligulacMarkup.predictMatch);
+	domElement.find('.player1').playerLink({
+		mode: 'player-link-by-id',
+		parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false }
+	}, ajaxData.pla);
+	domElement.find('.player2').playerLink({
+		mode: 'player-link-by-id',
+		parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false }
+	}, ajaxData.plb);
+
+	var aligulacResult = domElement.html();
+
+	var scorePredictions = '';
+	for (var i = 0; i < ajaxData.outcomes.length / 2; i++) {
+		scorePredictions += aligulacMarkup.scorePredictionLine.replace('{aligulac-score1}', ajaxData.outcomes[i].sca + '-' + ajaxData.outcomes[i].scb)
+			.replace('{aligulac-score2}', ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].sca + '-' + ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].scb)
+			.replace('{aligulac-percent1}', Math.round(ajaxData.outcomes[i].prob * 10000) / 100)
+			.replace('{aligulac-percent2}', Math.round(ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].prob * 1000) / 100);
+	}
+	aligulacResult = aligulacResult.replace('{score-predictions}', scorePredictions)
+		.replace('{aligulac-score-summary-prediction1}', Math.round(ajaxData.proba * 10000)/100)
+		.replace('{aligulac-score-summary-prediction2}', Math.round(ajaxData.probb * 10000)/100);
+	domElement.html(aligulacResult);
+};
+
+$.fn.getPlayerLinkById = function(params) {
+	var domElement = $(this);
 	$.ajax({
 		type: "GET",
 		url: aligulacConfig.aligulacApiRoot +
 			'player/' +
 			params.parameters.playerId +
-			'?apikey=' +
-			aligulacConfig.apiKey + '&callback=?',
+			'?callback=?',
 		dataType: "json",
-	}).done(function (ajaxData) {
-		playerLink(params, ajaxData, domElement);
+		data:
+		{
+			apikey: aligulacConfig.apiKey
+		},
+	}).done(function(ajaxData) {
+		domElement.playerLink(params, ajaxData);
 	});
-}
+};
 
-function getPlayerLinkByName(params, domElement) {
+$.fn.getPlayerLinkByName = function(params) {
+	var domElement = $(this);
 	$.ajax({
 		type: "GET",
 		url: aligulacConfig.aligulacApiRoot +
 			'player/' +
-			'?apikey=' +
-			aligulacConfig.apiKey +
-			'&tag__iregex=' + params.parameters.playerName +
+			'?tag__iregex=' + params.parameters.playerName +
 			'&callback=?',
 		dataType: "json",
-	}).done(function (ajaxData) {
-		playerLink(params, ajaxData.objects[0], domElement);
+		data:
+		{
+			apikey: aligulacConfig.apiKey
+		},
+	}).done(function(ajaxData) {
+		domElement.playerLink(params, ajaxData.objects[0]);
 	});
-}
+};
+
+$.fn.getPredictMatchByIds = function(params) {
+	var domElement = $(this);
+	$.ajax({
+		type: "GET",
+		url: aligulacConfig.aligulacApiRoot +
+			'predictmatch/' +
+			params.parameters.player1 + ',' + params.parameters.player2 +
+			'/?callback=?',
+		dataType: "json",
+		data:
+		{
+			apikey: aligulacConfig.apiKey,
+			bo: params.parameters.bo
+		},
+	}).done(function(ajaxData) {
+		domElement.predictMatchTable(params, ajaxData);
+	});
+};
 
 function getFullRaceName(raceSymbol) {
 	var raceName = '';
@@ -166,7 +242,7 @@ function getFullRaceName(raceSymbol) {
 			raceName = "Zerg";
 			break;
 		case "P":
-			raceName = "Protos";
+			raceName = "Protoss";
 			break;
 		case "T":
 			raceName = "Terran";
@@ -182,17 +258,26 @@ function getFullRaceName(raceSymbol) {
 }
 
 function initDefaultParameters(params) {
-	if (params.parameters.showFlag == null) {
-		params.parameters.showFlag = true;
+	//player link
+	if ((params.mode == 'player-link-by-id') || (params.mode == 'player-link-by-name')) {
+		if (params.parameters.showFlag == null) {
+			params.parameters.showFlag = true;
+		}
+		if (params.parameters.showRace == null) {
+			params.parameters.showRace = true;
+		}
+		if (params.parameters.showTeam == null) {
+			params.parameters.showTeam = true;
+		}
+		if (params.parameters.showPopup == null) {
+			params.parameters.showPopup = true;
+		}
 	}
-	if (params.parameters.showRace == null) {
-		params.parameters.showRace = true;
-	}
-	if (params.parameters.showTeam == null) {
-		params.parameters.showTeam = true;
-	}
-	if (params.parameters.showPopup == null) {
-		params.parameters.showPopup = true;
+		//predict match
+	else if (params.mode == 'predict-match-by-ids') {
+		if ((params.parameters.bo == null) || (params.parameters.bo % 2 == 0)) {
+			params.parameters.bo = 3;
+		}
 	}
 	return params;
 }
