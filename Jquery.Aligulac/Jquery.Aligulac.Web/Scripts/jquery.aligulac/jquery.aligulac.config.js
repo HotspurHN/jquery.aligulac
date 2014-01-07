@@ -6,8 +6,4 @@
 	aligulacApiRoot: "http://aligulac.com/api/v1/",
 	aligulacRoot: "http://aligulac.com",
 	ajaxLoading: "http://kupipoleti.ru/scripts/aj/images/ajax-loader.gif",
-	//attributes aliases:
-	aligulacPlayerIdAliases: ["data-aligulac-player-id", "data-apid"],
-	aligulacPlayerNameAliases: ["data-aligulac-player-name", "data-apn"],
-	aligulacPredictMatchAliases: ["data-apmi", "data-aligulac-predict-match-by-id"]
 };
