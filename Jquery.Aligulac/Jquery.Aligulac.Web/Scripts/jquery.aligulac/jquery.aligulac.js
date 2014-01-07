@@ -13,36 +13,59 @@ $.fn.aligulac = function (params) {
 	switch(params.mode)
 	{
 		case "player-link-by-id":
-			playerLinkById(params, domElement);
+			getPlayerLinkById(params, domElement);
 			break;
 		case "player-link-by-name":
-			playerLinkByName(params, domElement);
+			getPlayerLinkByName(params, domElement);
 			break;
 	}
 };
 
-function AligulacParseDomAttributes() {
-	$("[data-aligulac-player-id]").each(function() {
+$.aligulac = function () {
+	var aligulacPlayerByIdAttributeSelector = '';
+	for (var i = 0; i < aligulacConfig.aligulacPlayerIdAliases.length; i++) {
+		aligulacPlayerByIdAttributeSelector += '[' + aligulacConfig.aligulacPlayerIdAliases[i] + ']';
+		if (i != aligulacConfig.aligulacPlayerIdAliases.length - 1) {
+			aligulacPlayerByIdAttributeSelector += ",";
+		}
+	}
+	var aligulacPlayerByNameAttributeSelector = '';
+	for (var j = 0; j < aligulacConfig.aligulacPlayerNameAliases.length; j++) {
+		aligulacPlayerByNameAttributeSelector += '[' + aligulacConfig.aligulacPlayerNameAliases[j] + ']';
+		if (j != aligulacConfig.aligulacPlayerNameAliases.length - 1) {
+			aligulacPlayerByNameAttributeSelector += ",";
+		}
+	}
+	
+	$(aligulacPlayerByIdAttributeSelector).each(function () {
 		$(this).aligulac({
 			mode: 'player-link-by-id',
 			parameters: {
-				playerId: $(this).attr('data-aligulac-player-id')
-	}
-		});
-	});
-	$("[data-aligulac-player-name]").each(function () {
-		$(this).aligulac({
-			mode: 'player-link-by-name',
-			parameters: {
-				playerName: $(this).attr('data-aligulac-player-name')
+				playerId: $(this).selectValuableAttribute(aligulacConfig.aligulacPlayerIdAliases)
 			}
 		});
 	});
-}
+	$(aligulacPlayerByNameAttributeSelector).each(function () {
+		$(this).aligulac({
+			mode: 'player-link-by-name',
+			parameters: {
+				playerName: $(this).selectValuableAttribute(aligulacConfig.aligulacPlayerNameAliases)
+			}
+		});
+	});
+};
+
+$.fn.selectValuableAttribute = function(aliases) {
+	for (var i = 0; i < aliases.length; i++) {
+		if ($(this).attr(aliases[i]) != null) {
+			return $(this).attr(aliases[i]);
+		}
+	}
+	return '';
+};
 
 function playerLink(params, ajaxData, domElement) {
 	var aligulacResult = aligulacMarkup.playerLink;
-
 
 	var aligulacFlag = '';
 	if (params.parameters.showFlag) {
@@ -107,7 +130,7 @@ function playerLink(params, ajaxData, domElement) {
 	domElement.find('.aligulac-ajax-loading').remove();
 }
 
-function playerLinkById(params, domElement) {
+function getPlayerLinkById(params, domElement) {
 	$.ajax({
 		type: "GET",
 		url: aligulacConfig.aligulacApiRoot +
@@ -120,7 +143,8 @@ function playerLinkById(params, domElement) {
 		playerLink(params, ajaxData, domElement);
 	});
 }
-function playerLinkByName(params, domElement) {
+
+function getPlayerLinkByName(params, domElement) {
 	$.ajax({
 		type: "GET",
 		url: aligulacConfig.aligulacApiRoot +
@@ -149,6 +173,9 @@ function getFullRaceName(raceSymbol) {
 			break;
 		case "R":
 			raceName = "Random";
+			break;
+		case "S":
+			raceName = "Switcher";
 			break;
 	}
 	return raceName;
