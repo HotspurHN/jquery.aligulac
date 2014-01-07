@@ -172,7 +172,7 @@ $.fn.predictMatchTable = function (params, ajaxData) {
 		scorePredictions += aligulacMarkup.scorePredictionLine.replace('{aligulac-score1}', ajaxData.outcomes[i].sca + '-' + ajaxData.outcomes[i].scb)
 			.replace('{aligulac-score2}', ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].sca + '-' + ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].scb)
 			.replace('{aligulac-percent1}', Math.round(ajaxData.outcomes[i].prob * 10000) / 100)
-			.replace('{aligulac-percent2}', Math.round(ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].prob * 1000) / 100);
+			.replace('{aligulac-percent2}', Math.round(ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].prob * 10000) / 100);
 	}
 	aligulacResult = aligulacResult.replace('{score-predictions}', scorePredictions)
 		.replace('{aligulac-score-summary-prediction1}', Math.round(ajaxData.proba * 10000)/100)
