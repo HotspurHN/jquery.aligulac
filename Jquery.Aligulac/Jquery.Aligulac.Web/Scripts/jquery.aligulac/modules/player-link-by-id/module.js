@@ -8,10 +8,10 @@
 // playerId - required
 
 // module initialization
+var aligulac_player_link_by_id_module_name = "player-link-by-id";
 $.aligulac.registerModule(
 	{
-		moduleName: "player-link-by-id",
-		moduleKey: "player-link-by-id",
+		moduleName: aligulac_player_link_by_id_module_name,
 		aliasesAttribute: ["data-aligulac-player-id", "data-apid"],
 		parameters: [{
 			showFlag: true,
@@ -24,18 +24,33 @@ $.aligulac.registerModule(
 		},
 		load: function () {
 			$.aligulac.runModule({
-				mode: 'player-link-by-id',
-				selector: $($.aligulac.generateAttributeSelector("player-link-by-id")),
+				mode: aligulac_player_link_by_id_module_name,
+				selector: $($.aligulac.generateAttributeSelector(aligulac_player_link_by_id_module_name)),
 				parameters: {
-					playerId: $($.aligulac.generateAttributeSelector("player-link-by-id"))
-						.selectValuableAttribute(selectModuleByName("player-link-by-id").aliasesAttribute),
-
+					playerId: $($.aligulac.generateAttributeSelector(aligulac_player_link_by_id_module_name))
+						.selectValuableAttribute(selectModuleByName(aligulac_player_link_by_id_module_name).aliasesAttribute),
 					showFlag: true,
 					showRace: true,
 					showTeam: true,
 					showPopup: false
 				}
 			});
+		},
+		markup:
+		{
+			playerLink: "{flag-image}{race-image}{team-link}<a href='{aligulac-player-link}' class='aligulac-player-link'>{aligulac-player-name}</a>",
+			playerFlag: "<img src='{aligulac-player-flag-image}' alt='{aligulac-player-flag-name}' />",
+			playerRace: "<img src='{aligulac-player-race-image}' alt='{aligulac-player-race-name}' />",
+			teamLink: "<a href='{aligulact-team-url}' class='aligulac-team-link'>{aligulac-team-name}</a>.",
+			playerPopup: "<div class='aligulac-popup-content'>" +
+				"<ul><li class='aligulac-popup-header'>{aligulac-player-name}</li>" +
+				"<li><strong>Race:</strong> {race-image} {aligulac-player-race-name}</li>" +
+				"<li><strong>Country:</strong> {flag-image} {aligulac-player-flag-name}</li>" +
+				"<li><strong>Full name:</strong>{aligulac-player-full-name}</li>" +
+				"<li><strong>Aka:</strong>{aligulac-player-akas}</li>" +
+				"<li><strong>Birthday:</strong>{aligulac-player-birthday}</li>" +
+				"<li><strong>Team:</strong>{aligulac-team-name}</li>" +
+				"</ul></div>"
 		}
 	});
 //module realization
@@ -59,24 +74,25 @@ $.aligulac.getPlayerLinkById = function (params) {
 
 $.fn.playerLink = function (params, ajaxData) {
 	var domElement = $(this);
-	var aligulacResult = aligulacMarkupPlayerLinkById.playerLink;
+	var markup = selectModuleByName(aligulac_player_link_by_id_module_name);
+	var aligulacResult = markup.playerLink;
 
 	var aligulacFlag = '';
 	if (params.parameters.showFlag) {
-		aligulacFlag = aligulacMarkupPlayerLinkById.playerFlag
+		aligulacFlag = markup.playerFlag
 			.replace('{aligulac-player-flag-image}', aligulacConfig.flagsDirectory + ajaxData.country.toLowerCase() + '.png')
 			.replace('{aligulac-player-flag-name}', ajaxData.country);
 	}
 	var aligulacRace = '';
 	if (params.parameters.showRace) {
-		aligulacRace = aligulacMarkupPlayerLinkById.playerRace
+		aligulacRace = markup.playerRace
 			.replace('{aligulac-player-race-image}', aligulacConfig.racesDirectory + ajaxData.race.toUpperCase() + '.png')
 			.replace('{aligulac-player-race-name}', getFullRaceName(ajaxData.race));
 	}
 	var aligulacClan = '';
 	if (params.parameters.showTeam) {
 		if (ajaxData.current_teams.length > 0) {
-			aligulacClan = aligulacMarkupPlayerLinkById.teamLink
+			aligulacClan = markup.teamLink
 				.replace('{aligulact-team-url}', aligulacConfig.aligulacRoot + '/teams/' + ajaxData.current_teams[0].team.id)
 				.replace('{aligulac-team-name}', ajaxData.current_teams[0].team.shortname);
 		}
@@ -96,13 +112,13 @@ $.fn.playerLink = function (params, ajaxData) {
 			teams = ajaxData.current_teams[0].team.shortname;
 		}
 
-		aligulacPopupContent = aligulacMarkupPlayerLinkById.playerPopup
+		aligulacPopupContent = markup.playerPopup
 			.replace('{aligulac-player-name}', ajaxData.tag)
-			.replace('{race-image}', aligulacMarkupPlayerLinkById.playerRace
+			.replace('{race-image}', markup.playerRace
 				.replace('{aligulac-player-race-image}', aligulacConfig.racesDirectory + ajaxData.race.toUpperCase() + '.png')
 				.replace('{aligulac-player-race-name}', getFullRaceName(ajaxData.race)))
 			.replace('{aligulac-player-race-name}', getFullRaceName(ajaxData.race))
-			.replace('{flag-image}', aligulacMarkupPlayerLinkById.playerFlag
+			.replace('{flag-image}', markup.playerFlag
 				.replace('{aligulac-player-flag-image}', aligulacConfig.flagsDirectory + ajaxData.country.toLowerCase() + '.png')
 				.replace('{aligulac-player-flag-name}', ajaxData.country))
 			.replace('{aligulac-player-flag-name}', ajaxData.country)
@@ -121,5 +137,4 @@ $.fn.playerLink = function (params, ajaxData) {
 			}
 		});
 	}
-	domElement.find('.aligulac-ajax-loading').remove();
 };

@@ -1,4 +1,4 @@
-﻿// description: module for jquery.aligulac. requires module player-link-by-id
+﻿// description: module for jquery.aligulac. requires module player-link-by-id, player-link-by-name, predict-match-by-player-name
 // used for display player info by name.
 // parameters:
 // bo - count of games default 3

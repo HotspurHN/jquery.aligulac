@@ -1,14 +1,79 @@
 ﻿/// <reference path="../jquery-2.0.3.intellisense.js" />
 /// <reference path="jquery.aligulac.config.js" />
-/// <reference path="jquery.aligulac.markup.js" />
+var modules = [];
 
-$.fn.aligulacjq = function (params) {
-	var domElement = this;
-	params.selector = domElement;
-	if (params.mode == null) {
-		console.log('Aligulac plugin: Critical error! Mode isn\'t specified!');
+Math.percentToNumber = function (number) {
+	return Math.round(number * 10000) / 100;
+};
+
+function getFullRaceName(raceSymbol) {
+	var raceName = '';
+	switch (raceSymbol) {
+		case "Z":
+			raceName = "Zerg";
+			break;
+		case "P":
+			raceName = "Protoss";
+			break;
+		case "T":
+			raceName = "Terran";
+			break;
+		case "R":
+			raceName = "Random";
+			break;
+		case "S":
+			raceName = "Switcher";
+			break;
 	}
+	return raceName;
+}
 
+$.fn.selectValuableAttribute = function (aliases) {
+	for (var i = 0; i < aliases.length; i++) {
+		if ($(this).attr(aliases[i]) != null) {
+			return $(this).attr(aliases[i]);
+		}
+	}
+	return '';
+};
+
+$.aligulac.registerModule = function (moduleObject) {
+	modules.push(moduleObject);
+};
+
+$.aligulac.generateAttributeSelector = function (moduleName) {
+	var selector = '';
+	var module = selectModuleByName(moduleName);
+	for (var i = 0; i < module.aliasesAttribute.length; i++) {
+		selector += '[' + module.aliasesAttribute[i] + ']';
+		if (i != module.aliasesAttribute.length - 1) {
+			selector += ",";
+		}
+	}
+	return selector;
+};
+
+$.aligulac.runModule = function (params) {
+	var module = selectModuleByName(params.mode);
+	params.selector.html('<img class="aligulac-ajax-loading" src="' + aligulacConfig.ajaxLoading + '" alt="ajax" />');
+	$.each(module.parameters, function (key, defaultValue) {
+		if (params.parameters[key] == null) {
+			params.parameters[key] = defaultValue;
+		}
+	});
+	module.logic(params);
+};
+
+function selectModuleByName(moduleName) {
+	for (var j = 0; j < modules.length; j++) {
+		if (modules[j].moduleName == moduleName) {
+			return modules[j];
+		}
+	}
+	return {};
+}
+$.fn.aligulacjq = function (params) {
+	params.selector = this;
 	$.aligulac.runModule(params);
 };
 

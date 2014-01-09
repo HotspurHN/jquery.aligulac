@@ -8,36 +8,36 @@
 // playerName - reqired
 
 // module initialization
+var aligulac_player_link_by_name_module_id = 'player-link-by-name';
 $.aligulac.registerModule(
-	{
-		moduleName: "player-link-by-name",
-		moduleKey: "player-link-by-name",
-		aliasesAttribute: ["data-aligulac-player-name", "data-apn"],
-		parameters: [{
-			showFlag: true,
-			showRace: true,
-			showTeam: true,
-			showPopup: true
-		}],
-		logic: function(params) {
-			$.aligulac.getPlayerLinkByName(params);
-		},
-		load: function () {
-			$.aligulac.runModule({
-				mode: 'player-link-by-name',
-				selector: $($.aligulac.generateAttributeSelector("player-link-by-name")),
-				parameters: {
-					playerName: $($.aligulac.generateAttributeSelector("player-link-by-name"))
-						.selectValuableAttribute(selectModuleByName("player-link-by-name").aliasesAttribute),
+{
+	moduleName: aligulac_player_link_by_name_module_id,
+	aliasesAttribute: ["data-aligulac-player-name", "data-apn"],
+	parameters: [{
+		showFlag: true,
+		showRace: true,
+		showTeam: true,
+		showPopup: true
+	}],
+	logic: function (params) {
+		$.aligulac.getPlayerLinkByName(params);
+	},
+	load: function () {
+		$.aligulac.runModule({
+			mode: aligulac_player_link_by_name_module_id,
+			selector: $($.aligulac.generateAttributeSelector(aligulac_player_link_by_name_module_id)),
+			parameters: {
+				playerName: $($.aligulac.generateAttributeSelector(aligulac_player_link_by_name_module_id))
+					.selectValuableAttribute(selectModuleByName(aligulac_player_link_by_name_module_id).aliasesAttribute),
 
-					showFlag: true,
-					showRace: true,
-					showTeam: true,
-					showPopup: false
-				}
-			});
-		}
-	});
+				showFlag: true,
+				showRace: true,
+				showTeam: true,
+				showPopup: false
+			}
+		});
+	}
+});
 //module realization
 $.aligulac.getPlayerLinkByName = function (params) {
 	var domElement = params.selector;
