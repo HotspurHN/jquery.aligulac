@@ -73,15 +73,58 @@ $.aligulac.getPlayerLinkById = function (params) {
 };
 
 $.fn.playerLink = function (params, ajaxData) {
-	var domElement = $(this);
-	var markup = selectModuleByName(aligulac_player_link_by_id_module_name);
+	if (params.parameters.playerId != "") {
+		var domElement = $(this);
+		var aligulacResult = $.aligulac.getPlayerLinkResult(params, ajaxData);
+
+		domElement.html(aligulacResult);
+		if (params.parameters.showPopup) {
+			var aligulacPopupContent = '';
+			var teams = '';
+			if (ajaxData.current_teams.length > 0) {
+				teams = ajaxData.current_teams[0].team.shortname;
+			}
+
+			aligulacPopupContent = markup.playerPopup
+				.replace('{aligulac-player-name}', ajaxData.tag)
+				.replace('{race-image}', markup.playerRace
+					.replace('{aligulac-player-race-image}', aligulacConfig.racesDirectory + ajaxData.race.toUpperCase() + '.png')
+					.replace('{aligulac-player-race-name}', getFullRaceName(ajaxData.race)))
+				.replace('{aligulac-player-race-name}', getFullRaceName(ajaxData.race))
+				.replace('{flag-image}', markup.playerFlag
+					.replace('{aligulac-player-flag-image}', aligulacConfig.flagsDirectory + ajaxData.country.toLowerCase() + '.png')
+					.replace('{aligulac-player-flag-name}', ajaxData.country))
+				.replace('{aligulac-player-flag-name}', ajaxData.country)
+				.replace('{aligulac-player-full-name}', ajaxData.name)
+				.replace('{aligulac-player-akas}', ajaxData.aliases.join(','))
+				.replace('{aligulac-player-birthday}', ajaxData.birthday)
+				.replace('{aligulac-team-name}', teams);
+			domElement.find('a').qtip({
+				content: {
+					text: aligulacPopupContent,
+					position: {
+						target: 'mouse',
+						adjust: { x: 5, y: 5 },
+						style: 'fixed'
+					}
+				}
+			});
+		}
+	}
+};
+
+$.aligulac.getPlayerLinkResult = function (params, ajaxData)
+{
+	var markup = selectModuleByName(aligulac_player_link_by_id_module_name).markup;
 	var aligulacResult = markup.playerLink;
 
 	var aligulacFlag = '';
 	if (params.parameters.showFlag) {
-		aligulacFlag = markup.playerFlag
-			.replace('{aligulac-player-flag-image}', aligulacConfig.flagsDirectory + ajaxData.country.toLowerCase() + '.png')
-			.replace('{aligulac-player-flag-name}', ajaxData.country);
+		if (ajaxData.country != null) {
+			aligulacFlag = markup.playerFlag
+				.replace('{aligulac-player-flag-image}', aligulacConfig.flagsDirectory + ajaxData.country.toLowerCase() + '.png')
+				.replace('{aligulac-player-flag-name}', ajaxData.country);
+		}
 	}
 	var aligulacRace = '';
 	if (params.parameters.showRace) {
@@ -98,43 +141,9 @@ $.fn.playerLink = function (params, ajaxData) {
 		}
 	}
 
-	aligulacResult = aligulacResult.replace('{flag-image}', aligulacFlag)
+	return  aligulacResult.replace('{flag-image}', aligulacFlag)
 		.replace('{race-image}', aligulacRace)
 		.replace('{team-link}', aligulacClan)
 		.replace('{aligulac-player-link}', aligulacConfig.aligulacRoot + '/players/' + ajaxData.id)
 		.replace('{aligulac-player-name}', ajaxData.tag);
-
-	domElement.html(aligulacResult);
-	if (params.parameters.showPopup) {
-		var aligulacPopupContent = '';
-		var teams = '';
-		if (ajaxData.current_teams.length > 0) {
-			teams = ajaxData.current_teams[0].team.shortname;
-		}
-
-		aligulacPopupContent = markup.playerPopup
-			.replace('{aligulac-player-name}', ajaxData.tag)
-			.replace('{race-image}', markup.playerRace
-				.replace('{aligulac-player-race-image}', aligulacConfig.racesDirectory + ajaxData.race.toUpperCase() + '.png')
-				.replace('{aligulac-player-race-name}', getFullRaceName(ajaxData.race)))
-			.replace('{aligulac-player-race-name}', getFullRaceName(ajaxData.race))
-			.replace('{flag-image}', markup.playerFlag
-				.replace('{aligulac-player-flag-image}', aligulacConfig.flagsDirectory + ajaxData.country.toLowerCase() + '.png')
-				.replace('{aligulac-player-flag-name}', ajaxData.country))
-			.replace('{aligulac-player-flag-name}', ajaxData.country)
-			.replace('{aligulac-player-full-name}', ajaxData.name)
-			.replace('{aligulac-player-akas}', ajaxData.aliases.join(','))
-			.replace('{aligulac-player-birthday}', ajaxData.birthday)
-			.replace('{aligulac-team-name}', teams);
-		domElement.find('a').qtip({
-			content: {
-				text: aligulacPopupContent,
-				position: {
-					target: 'mouse',
-					adjust: { x: 5, y: 5 },
-					style: 'fixed'
-				}
-			}
-		});
-	}
-};
+}

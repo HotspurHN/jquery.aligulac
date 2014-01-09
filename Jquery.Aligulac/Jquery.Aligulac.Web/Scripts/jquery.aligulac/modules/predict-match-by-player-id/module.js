@@ -42,6 +42,7 @@ $.aligulac.registerModule(
 	});
 //module realization
 $.aligulac.getPredictMatchByIds = function (params) {
+	if ((params.parameters.player1name != undefined) && (params.parameters.player2name != undefined)) {
 	var domElement = $(this);
 	$.ajax({
 		type: "GET",
@@ -60,32 +61,33 @@ $.aligulac.getPredictMatchByIds = function (params) {
 	});
 };
 
-$.fn.predictMatchTable = function (params, ajaxData) {
-	var domElement = params.selector;
-	var markup = selectModuleByName(alogulac_predict_match_by_player_id_module_name);
-	ajaxData.pla.id = params.parameters.player1;
-	ajaxData.plb.id = params.parameters.player2;
-	domElement.html(markup.predictMatch);
-	domElement.find('.player1').playerLink({
-		mode: 'player-link-by-id',
-		parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false }
-	}, ajaxData.pla);
-	domElement.find('.player2').playerLink({
-		mode: 'player-link-by-id',
-		parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false }
-	}, ajaxData.plb);
+	$.fn.predictMatchTable = function(params, ajaxData) {
+		var domElement = params.selector;
+		var markup = selectModuleByName(alogulac_predict_match_by_player_id_module_name);
+		ajaxData.pla.id = params.parameters.player1;
+		ajaxData.plb.id = params.parameters.player2;
+		domElement.html(markup.predictMatch);
+		domElement.find('.player1').playerLink({
+			mode: 'player-link-by-id',
+			parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false }
+		}, ajaxData.pla);
+		domElement.find('.player2').playerLink({
+			mode: 'player-link-by-id',
+			parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false }
+		}, ajaxData.plb);
 
-	var aligulacResult = domElement.html();
+		var aligulacResult = domElement.html();
 
-	var scorePredictions = '';
-	for (var i = 0; i < ajaxData.outcomes.length / 2; i++) {
-		scorePredictions += markup.scorePredictionLine.replace('{aligulac-score1}', ajaxData.outcomes[i].sca + '-' + ajaxData.outcomes[i].scb)
+		var scorePredictions = '';
+		for (var i = 0; i < ajaxData.outcomes.length / 2; i++) {
+			scorePredictions += markup.scorePredictionLine.replace('{aligulac-score1}', ajaxData.outcomes[i].sca + '-' + ajaxData.outcomes[i].scb)
 				.replace('{aligulac-score2}', ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].sca + '-' + ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].scb)
 				.replace('{aligulac-percent1}', Math.percentToNumber(ajaxData.outcomes[i].prob))
 				.replace('{aligulac-percent2}', Math.percentToNumber(ajaxData.outcomes[(ajaxData.outcomes.length / 2) + i].prob));
+		}
+		aligulacResult = aligulacResult.replace('{score-predictions}', scorePredictions)
+			.replace('{aligulac-score-summary-prediction1}', Math.percentToNumber(ajaxData.proba))
+			.replace('{aligulac-score-summary-prediction2}', Math.percentToNumber(ajaxData.probb));
+		domElement.html(aligulacResult);
 	}
-	aligulacResult = aligulacResult.replace('{score-predictions}', scorePredictions)
-		.replace('{aligulac-score-summary-prediction1}', Math.percentToNumber(ajaxData.proba))
-		.replace('{aligulac-score-summary-prediction2}', Math.percentToNumber(ajaxData.probb));
-	domElement.html(aligulacResult);
 };

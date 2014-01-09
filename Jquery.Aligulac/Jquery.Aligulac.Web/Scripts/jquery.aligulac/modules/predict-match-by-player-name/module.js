@@ -36,19 +36,7 @@ $.aligulac.registerModule(
 //module realization
 $.aligulac.getPredictMatchByNames = function (params) {
 	var domElement = params.selector;
-	$.ajax({
-		type: "GET",
-		url: aligulacConfig.aligulacApiRoot +
-			'player/' +
-			'?callback=?',
-		dataType: "json",
-		data:
-		{
-			tag__iexact: params.parameters.player1name,
-			apikey: aligulacConfig.apiKey
-		},
-	}).done(function (ajaxData) {
-		params.parameters.player1 = ajaxData.objects[0].id;
+	if ((params.parameters.player1name != "") && (params.parameters.player2name != "")) {
 		$.ajax({
 			type: "GET",
 			url: aligulacConfig.aligulacApiRoot +
@@ -57,26 +45,40 @@ $.aligulac.getPredictMatchByNames = function (params) {
 			dataType: "json",
 			data:
 			{
-				tag__iexact: params.parameters.player2name,
+				tag__iexact: params.parameters.player1name,
 				apikey: aligulacConfig.apiKey
 			},
-		}).done(function (ajaxData2) {
-			params.parameters.player2 = ajaxData2.objects[0].id;
+		}).done(function(ajaxData) {
+			params.parameters.player1 = ajaxData.objects[0].id;
 			$.ajax({
 				type: "GET",
 				url: aligulacConfig.aligulacApiRoot +
-					'predictmatch/' +
-					params.parameters.player1 + ',' + params.parameters.player2 +
-					'/?callback=?',
+					'player/' +
+					'?callback=?',
 				dataType: "json",
 				data:
-			{
-				apikey: aligulacConfig.apiKey,
-				bo: params.parameters.bo
-			},
-			}).done(function (ajaxData3) {
-				domElement.predictMatchTable(params, ajaxData3);
+				{
+					tag__iexact: params.parameters.player2name,
+					apikey: aligulacConfig.apiKey
+				},
+			}).done(function(ajaxData2) {
+				params.parameters.player2 = ajaxData2.objects[0].id;
+				$.ajax({
+					type: "GET",
+					url: aligulacConfig.aligulacApiRoot +
+						'predictmatch/' +
+						params.parameters.player1 + ',' + params.parameters.player2 +
+						'/?callback=?',
+					dataType: "json",
+					data:
+					{
+						apikey: aligulacConfig.apiKey,
+						bo: params.parameters.bo
+					},
+				}).done(function(ajaxData3) {
+					domElement.predictMatchTable(params, ajaxData3);
+				});
 			});
 		});
-	});
+	}
 };

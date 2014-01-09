@@ -61,12 +61,13 @@
     <Content Include="Content\css\jquery.aligulac.css" />
     <Content Include="HtmlPage1.html" />
     <Content Include="Scripts\jquery.aligulac\modules\event-results\img\Esltumbnail.png" />
-    <Content Include="Scripts\jquery.aligulac\modules\event-results\img\GSLLogo_small.png" />
+    <Content Include="Scripts\jquery.aligulac\modules\event-results\img\gsl.png" />
     <Content Include="Scripts\jquery.aligulac\modules\event-results\img\PL-small.png" />
     <Content Include="Scripts\jquery.aligulac\modules\event-results\img\ROGlogo.png" />
     <Content Include="Scripts\jquery.aligulac\modules\event-results\img\TeamStoryCupSmall.png" />
     <Content Include="Scripts\jquery.aligulac\modules\event-results\img\WCSAM-logo-small.png" />
     <Content Include="Scripts\jquery.aligulac\modules\event-results\img\WCSEU-logo-small.png" />
+    <Content Include="Scripts\jquery.aligulac\modules\event-results\module.js" />
     <Content Include="Scripts\jquery.aligulac\modules\player-link-by-id\module.js" />
     <Content Include="Scripts\jquery.aligulac\modules\player-link-by-name\module.js" />
     <Content Include="Scripts\jquery.aligulac\modules\predict-match-by-player-name\module.js" />

@@ -29,7 +29,6 @@ $.aligulac.registerModule(
 			parameters: {
 				playerName: $($.aligulac.generateAttributeSelector(aligulac_player_link_by_name_module_id))
 					.selectValuableAttribute(selectModuleByName(aligulac_player_link_by_name_module_id).aliasesAttribute),
-
 				showFlag: true,
 				showRace: true,
 				showTeam: true,
@@ -40,19 +39,23 @@ $.aligulac.registerModule(
 });
 //module realization
 $.aligulac.getPlayerLinkByName = function (params) {
-	var domElement = params.selector;
-	$.ajax({
-		type: "GET",
-		url: aligulacConfig.aligulacApiRoot +
-			'player/' +
-			'?callback=?',
-		dataType: "json",
-		data:
-		{
-			tag__iexact: params.parameters.playerName,
-			apikey: aligulacConfig.apiKey
-		},
-	}).done(function (ajaxData) {
-		domElement.playerLink(params, ajaxData.objects[0]);
-	});
+	if (params.parameters.playerName != "") {
+		var domElement = params.selector;
+		$.ajax({
+			type: "GET",
+			url: aligulacConfig.aligulacApiRoot +
+				'player/' +
+				'?callback=?',
+			dataType: "json",
+			data:
+			{
+				tag__iexact: params.parameters.playerName,
+				apikey: aligulacConfig.apiKey
+			},
+		}).done(function(ajaxData) {
+			params.mode = aligulac_player_link_by_id_module_name;
+			params.parameters.playerId = ajaxData.objects[0].id;
+			domElement.playerLink(params, ajaxData.objects[0]);
+		});
+	}
 };

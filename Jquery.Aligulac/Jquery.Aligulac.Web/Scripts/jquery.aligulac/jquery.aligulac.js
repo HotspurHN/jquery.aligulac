@@ -2,6 +2,11 @@
 /// <reference path="jquery.aligulac.config.js" />
 var modules = [];
 
+$.aligulac = {};
+
+$.aligulac.registerModule = function (moduleObject) {
+	modules.push(moduleObject);
+};
 Math.percentToNumber = function (number) {
 	return Math.round(number * 10000) / 100;
 };
@@ -37,9 +42,6 @@ $.fn.selectValuableAttribute = function (aliases) {
 	return '';
 };
 
-$.aligulac.registerModule = function (moduleObject) {
-	modules.push(moduleObject);
-};
 
 $.aligulac.generateAttributeSelector = function (moduleName) {
 	var selector = '';
@@ -61,6 +63,7 @@ $.aligulac.runModule = function (params) {
 			params.parameters[key] = defaultValue;
 		}
 	});
+	console.log(module.moduleName + " run");
 	module.logic(params);
 };
 
@@ -80,5 +83,6 @@ $.fn.aligulacjq = function (params) {
 $.aligulacjq = function () {
 	for (var j = 0; j < modules.length; j++) {
 		modules[j].load();
+		console.log(modules[j].moduleName + " loaded");
 	}
 };
