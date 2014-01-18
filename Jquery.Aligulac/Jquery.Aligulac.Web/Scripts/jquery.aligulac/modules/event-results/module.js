@@ -130,8 +130,12 @@ $.aligulac.getAllMatchesForEvent = function (ajaxData) {
             eventobj__id: ajaxData.id
         },
     }).success(function (result) {
-        ajaxData.selector.find(".aligulac-event-num-" + ajaxData.id).html(
-            ajaxData.selector.find(".aligulac-event-num-" + ajaxData.id).html().replace("<tr><td>{aligulac-scores-match}</td></tr>", $.eventResults(result)));
+        if (result.objects.length == 0) {
+            ajaxData.selector.find(".aligulac-event-num-" + ajaxData.id).remove();
+        } else {
+            ajaxData.selector.find(".aligulac-event-num-" + ajaxData.id).html(
+                ajaxData.selector.find(".aligulac-event-num-" + ajaxData.id).html().replace("<tr><td>{aligulac-scores-match}</td></tr>", $.eventResults(result)));
+            }
         for (var i = 0; i < ajaxData.children.length; i++) {
             var childrenMatchParams = ajaxData;
             childrenMatchParams.eventId = ajaxData.children[i].replace(new RegExp("/api/v1/event/([0-9]*)/"), "$1");
