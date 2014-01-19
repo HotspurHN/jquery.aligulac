@@ -6,6 +6,7 @@
 // player2name - reqired. player name
 
 // module initialization
+$.aligulac.predictMatchByNames = {};
 var alogulac_predict_match_by_player_name_module_name = "predict-match-by-player-name";
 $.aligulac.registerModule(
 	{
@@ -16,7 +17,7 @@ $.aligulac.registerModule(
 			bo: 3
 		}],
 		logic: function(params) {
-			$.aligulac.getPredictMatchByNames(params);
+			$.aligulac.predictMatchByNames.getPredictMatchByNames(params);
 		},
 		load: function() {
 			var pmparams = $($.aligulac.generateAttributeSelector(alogulac_predict_match_by_player_name_module_name))
@@ -34,7 +35,7 @@ $.aligulac.registerModule(
 		}
 	});
 //module realization
-$.aligulac.getPredictMatchByNames = function (params) {
+$.aligulac.predictMatchByNames.getPredictMatchByNames = function (params) {
 	var domElement = params.selector;
 	if ((params.parameters.player1name != "") && (params.parameters.player2name != "")) {
 		$.ajax({
@@ -61,7 +62,7 @@ $.aligulac.getPredictMatchByNames = function (params) {
 					tag__iexact: params.parameters.player2name,
 					apikey: aligulacConfig.apiKey
 				},
-			}).done(function(ajaxData2) {
+			}).success(function (ajaxData2) {
 				params.parameters.player2 = ajaxData2.objects[0].id;
 				$.ajax({
 					type: "GET",

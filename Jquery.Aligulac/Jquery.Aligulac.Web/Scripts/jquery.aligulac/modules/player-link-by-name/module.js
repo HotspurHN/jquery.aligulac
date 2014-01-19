@@ -8,6 +8,7 @@
 // playerName - reqired
 
 // module initialization
+$.aligulac.playerLinkByName = {};
 var aligulac_player_link_by_name_module_id = 'player-link-by-name';
 $.aligulac.registerModule(
 {
@@ -20,7 +21,7 @@ $.aligulac.registerModule(
 		showPopup: true
 	}],
 	logic: function (params) {
-		$.aligulac.getPlayerLinkByName(params);
+		$.aligulac.playerLinkByName.getPlayerLinkByName(params);
 	},
 	load: function () {
 		$.aligulac.runModule({
@@ -38,7 +39,7 @@ $.aligulac.registerModule(
 	}
 });
 //module realization
-$.aligulac.getPlayerLinkByName = function (params) {
+$.aligulac.playerLinkByName.getPlayerLinkByName = function (params) {
 	if (params.parameters.playerName != "") {
 		var domElement = params.selector;
 		$.ajax({
@@ -52,7 +53,7 @@ $.aligulac.getPlayerLinkByName = function (params) {
 				tag__iexact: params.parameters.playerName,
 				apikey: aligulacConfig.apiKey
 			},
-		}).done(function(ajaxData) {
+		}).success(function(ajaxData) {
 			params.mode = aligulac_player_link_by_id_module_name;
 			params.parameters.playerId = ajaxData.objects[0].id;
 			domElement.playerLink(params, ajaxData.objects[0]);

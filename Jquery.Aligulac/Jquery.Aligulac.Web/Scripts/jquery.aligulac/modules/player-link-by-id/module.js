@@ -9,6 +9,7 @@
 
 // module initialization
 var aligulac_player_link_by_id_module_name = "player-link-by-id";
+$.aligulac.playerLinkById = {};
 $.aligulac.registerModule(
 	{
 		moduleName: aligulac_player_link_by_id_module_name,
@@ -20,7 +21,7 @@ $.aligulac.registerModule(
 			showPopup: true
 		}],
 		logic: function(params) {
-			$.aligulac.getPlayerLinkById(params);
+		    $.aligulac.playerLinkById.getPlayerLinkById(params);
 		},
 		load: function () {
 			$.aligulac.runModule({
@@ -54,7 +55,7 @@ $.aligulac.registerModule(
 		}
 	});
 //module realization
-$.aligulac.getPlayerLinkById = function (params) {
+$.aligulac.playerLinkById.getPlayerLinkById = function (params) {
 	var domElement = params.selector;
 	$.ajax({
 		type: "GET",
@@ -67,7 +68,7 @@ $.aligulac.getPlayerLinkById = function (params) {
 		{
 			apikey: aligulacConfig.apiKey
 		},
-	}).done(function (ajaxData) {
+	}).success(function (ajaxData) {
 		domElement.playerLink(params, ajaxData);
 	});
 };
@@ -75,7 +76,7 @@ $.aligulac.getPlayerLinkById = function (params) {
 $.fn.playerLink = function (params, ajaxData) {
 	if (params.parameters.playerId != "") {
 		var domElement = $(this);
-		var aligulacResult = $.aligulac.getPlayerLinkResult(params, ajaxData);
+		var aligulacResult = $.aligulac.playerLinkById.getPlayerLinkResult(params, ajaxData);
 
 		domElement.html(aligulacResult);
 		if (params.parameters.showPopup) {
@@ -113,7 +114,7 @@ $.fn.playerLink = function (params, ajaxData) {
 	}
 };
 
-$.aligulac.getPlayerLinkResult = function (params, ajaxData)
+$.aligulac.playerLinkById.getPlayerLinkResult = function (params, ajaxData)
 {
 	var markup = selectModuleByName(aligulac_player_link_by_id_module_name).markup;
 	var aligulacResult = markup.playerLink;

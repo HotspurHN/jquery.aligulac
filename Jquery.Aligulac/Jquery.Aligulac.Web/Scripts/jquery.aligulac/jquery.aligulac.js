@@ -63,7 +63,6 @@ $.aligulac.runModule = function (params) {
 			params.parameters[key] = defaultValue;
 		}
 	});
-	console.log(module.moduleName + " run");
 	module.logic(params);
 };
 
@@ -83,6 +82,5 @@ $.fn.aligulacjq = function (params) {
 $.aligulacjq = function () {
 	for (var j = 0; j < modules.length; j++) {
 		modules[j].load();
-		console.log(modules[j].moduleName + " loaded");
 	}
 };
