@@ -81,6 +81,7 @@ $.fn.aligulacjq = function (params) {
 
 $.aligulacjq = function () {
 	for (var j = 0; j < modules.length; j++) {
-		modules[j].load();
+	    modules[j].load();
+
 	}
 };

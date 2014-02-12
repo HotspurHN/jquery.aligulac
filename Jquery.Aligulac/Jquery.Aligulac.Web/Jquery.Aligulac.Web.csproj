@@ -66,6 +66,7 @@
     <Content Include="Scripts\jquery.aligulac\modules\player-link-by-name\module.js" />
     <Content Include="Scripts\jquery.aligulac\modules\predict-match-by-player-name\module.js" />
     <Content Include="Scripts\jquery.aligulac\modules\predict-match-by-player-id\module.js" />
+    <Content Include="Scripts\jquery.aligulac\modules\follow-player\module.js" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
