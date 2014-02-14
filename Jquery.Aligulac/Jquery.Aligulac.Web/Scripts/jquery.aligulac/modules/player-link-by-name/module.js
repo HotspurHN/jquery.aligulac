@@ -8,55 +8,57 @@
 // playerName - reqired
 
 // module initialization
-$.aligulac.playerLinkByName = {};
-var aligulac_player_link_by_name_module_id = 'player-link-by-name';
-$.aligulac.registerModule(
-{
-	moduleName: aligulac_player_link_by_name_module_id,
-	aliasesAttribute: ["data-aligulac-player-name", "data-apn"],
-	parameters: [{
-		showFlag: true,
-		showRace: true,
-		showTeam: true,
-		showPopup: true
-	}],
-	logic: function (params) {
-		$.aligulac.playerLinkByName.getPlayerLinkByName(params);
-	},
-	load: function () {
-		$.aligulac.runModule({
-			mode: aligulac_player_link_by_name_module_id,
-			selector: $($.aligulac.generateAttributeSelector(aligulac_player_link_by_name_module_id)),
-			parameters: {
-				playerName: $($.aligulac.generateAttributeSelector(aligulac_player_link_by_name_module_id))
-					.selectValuableAttribute(selectModuleByName(aligulac_player_link_by_name_module_id).aliasesAttribute),
-				showFlag: true,
-				showRace: true,
-				showTeam: true,
-				showPopup: false
-			}
-		});
-	}
-});
+$(document).ready(function () {
+    var moduleName = 'player-link-by-name';
+    $.aligulac.registerModule(
+    {
+        moduleName: moduleName,
+        aliasesAttribute: ["data-aligulac-player-name", "data-apn"],
+        parameters: [
+            {
+                showFlag: true,
+                showRace: true,
+                showTeam: true,
+                showPopup: true
+            }
+        ],
+        logic: function(params) {
+            getPlayerLinkByName(params);
+        },
+        load: function () {
+            var $moduleElement = $($.aligulac.generateAttributeSelector(moduleName)).clone();
+            $.aligulac.runModule({
+                mode: moduleName,
+                $domElement: $moduleElement,
+                parameters: {
+                    playerName: $moduleElement.selectValuableAttribute($.aligulac.selectModuleByName(moduleName).aliasesAttribute),
+                    showFlag: true,
+                    showRace: true,
+                    showTeam: true,
+                    showPopup: false
+                }
+            });
+        }
+    });
 //module realization
-$.aligulac.playerLinkByName.getPlayerLinkByName = function (params) {
-	if (params.parameters.playerName != "") {
-		var domElement = params.selector;
-		$.ajax({
-			type: "GET",
-			url: aligulacConfig.aligulacApiRoot +
-				'player/' +
-				'?callback=?',
-			dataType: "json",
-			data:
-			{
-				tag__iexact: params.parameters.playerName,
-				apikey: aligulacConfig.apiKey
-			},
-		}).success(function(ajaxData) {
-			params.mode = aligulac_player_link_by_id_module_name;
-			params.parameters.playerId = ajaxData.objects[0].id;
-			domElement.playerLink(params, ajaxData.objects[0]);
-		});
-	}
-};
+    var getPlayerLinkByName = function(params) {
+        if (params.parameters.playerName) {
+            var domElement = params.$domElement;
+            $.ajax({
+                type: "GET",
+                url: aligulacConfig.aligulacApiRoot +
+                    'player/' +
+                    '?callback=?',
+                dataType: "json",
+                data:
+                {
+                    tag__iexact: params.parameters.playerName,
+                    apikey: aligulacConfig.apiKey
+                },
+            }).success(function(ajaxData) {
+                params.parameters.playerId = ajaxData.objects[0].id;
+                domElement.aligulac.extentions.playerLink(params, ajaxData.objects[0]);
+            });
+        }
+    };
+});

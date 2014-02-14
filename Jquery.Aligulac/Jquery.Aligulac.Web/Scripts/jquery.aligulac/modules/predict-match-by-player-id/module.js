@@ -6,65 +6,68 @@
 // player2 - reqired. player id
 
 // module initialization
-$.aligulac.predictMatchByIds = {};
-var alogulac_predict_match_by_player_id_module_name = "predict-match-by-player-id";
-$.aligulac.registerModule(
-	{
-		moduleName: alogulac_predict_match_by_player_id_module_name,
-		aliasesAttribute: ["data-apmi", "data-aligulac-predict-match-by-id"],
-		parameters: [{
-			bo: 3
-		}],
-		logic: function (params) {
-			$.aligulac.predictMatchByIds.getPredictMatchByIds(params);
-		},
-		load: function () {
-			var pmparams = $($.aligulac.generateAttributeSelector(alogulac_predict_match_by_player_id_module_name))
-				.selectValuableAttribute(selectModuleByName(alogulac_predict_match_by_player_id_module_name).aliasesAttribute)
-				.split(',');
-			$.aligulac.runModule({
-				mode: alogulac_predict_match_by_player_id_module_name,
-				selector: $($.aligulac.generateAttributeSelector(alogulac_predict_match_by_player_id_module_name)),
-				parameters: {
-					player1: pmparams[0],
-					player2: pmparams[1],
-					bo: pmparams[2]
-				}
-			});
-		},
-		markup:
-		{
-			predictMatch: "<div class='predict-match-score'><div class='col1 player1'></div>" +
-				"<div class='col2 player2'></div>{score-predictions}" +
-				"<div class='col1 score-summary'>{aligulac-score-summary-prediction1}%</div>" +
-				"<div class='col2 score-summary'>{aligulac-score-summary-prediction2}%</div></div>",
-			scorePredictionLine: "<div class='col1'>{aligulac-percent1}% {aligulac-score1}</div><div class='col2'>{aligulac-score2} {aligulac-percent2}%</div>"
-		}
-	});
-//module realization
-$.aligulac.predictMatchByIds.getPredictMatchByIds = function (params) {
-	if ((params.parameters.player1name != undefined) && (params.parameters.player2name != undefined)) {
-	var domElement = $(this);
-	$.ajax({
-		type: "GET",
-		url: aligulacConfig.aligulacApiRoot +
-			'predictmatch/' +
-			params.parameters.player1 + ',' + params.parameters.player2 +
-			'/?callback=?',
-		dataType: "json",
-		data:
-	{
-		apikey: aligulacConfig.apiKey,
-		bo: params.parameters.bo
-	},
-	}).success(function (ajaxData) {
-		domElement.predictMatchTable(params, ajaxData);
-	});
-};
+$(document).ready(function () {
+    var moduleName = "predict-match-by-player-id";
+    $.aligulac.registerModule(
+    {
+        moduleName: moduleName,
+        aliasesAttribute: ["data-apmi", "data-aligulac-predict-match-by-id"],
+        parameters: [
+            {
+                bo: 3
+            }
+        ],
+        logic: function (params) {
+            getPredictMatchByIds(params);
+        },
+        load: function () {
+            var $moduleElement = $($.aligulac.generateAttributeSelector(moduleName)).clone();
+            var pmparams = $moduleElement
+                .selectValuableAttribute($.aligulac.selectModuleByName(moduleName).aliasesAttribute)
+                .split(',');
+            $.aligulac.runModule({
+                mode: moduleName,
+                $domElement: $moduleElement,
+                parameters: {
+                    player1: pmparams[0],
+                    player2: pmparams[1],
+                    bo: pmparams[2]
+                }
+            });
+        },
+        markup:
+        {
+            predictMatch: "<div class='predict-match-score'><div class='col1 player1'></div>" +
+                "<div class='col2 player2'></div>{score-predictions}" +
+                "<div class='col1 score-summary'>{aligulac-score-summary-prediction1}%</div>" +
+                "<div class='col2 score-summary'>{aligulac-score-summary-prediction2}%</div></div>",
+            scorePredictionLine: "<div class='col1'>{aligulac-percent1}% {aligulac-score1}</div><div class='col2'>{aligulac-score2} {aligulac-percent2}%</div>"
+        }
+    });
+    //module realization
+    var getPredictMatchByIds = function (params) {
+        if ((params.parameters.player1name) && (params.parameters.player2name)) {
+            $.ajax({
+                type: "GET",
+                url: aligulacConfig.aligulacApiRoot +
+                    'predictmatch/' +
+                    params.parameters.player1 + ',' + params.parameters.player2 +
+                    '/?callback=?',
+                dataType: "json",
+                data:
+                {
+                    apikey: aligulacConfig.apiKey,
+                    bo: params.parameters.bo
+                },
+            }).success(function (ajaxData) {
+                $(this).aligulac.extentions.predictMatchTable(params, ajaxData);
+            });
+        }
+    };
 
-    $.fn.predictMatchTable = function(params, ajaxData) {
-        var domElement = params.selector;
-        var markup = selectModuleByName(alogulac_predict_match_by_player_id_module_name);
+    $.fn.aligulac.extentions.predictMatchTable = function (params, ajaxData) {
+        var domElement = params.$domElement;
+        var markup = selectModuleByName(moduleName);
         ajaxData.pla.id = params.parameters.player1;
         ajaxData.plb.id = params.parameters.player2;
         domElement.html(markup.predictMatch);
@@ -91,4 +94,4 @@ $.aligulac.predictMatchByIds.getPredictMatchByIds = function (params) {
             .replace('{aligulac-score-summary-prediction2}', Math.percentToNumber(ajaxData.probb));
         domElement.html(aligulacResult);
     };
-};
+});
