@@ -22,28 +22,36 @@ $(document).ready(function () {
                 showPopup: true
             }
         ],
-        logic: function(params) {
-            getPlayerLinkByName(params);
+        logic: function (params) {
+            var deferred = $.Deferred();
+            if (params.parameters.playerName) {
+                return getPlayerLinkByName(params);
+            } else {
+                deferred.resolve({ result: '' });
+            }
+            return deferred;
         },
-        load: function () {
-            var $moduleElement = $($.aligulac.generateAttributeSelector(moduleName)).clone();
-            $.aligulac.runModule({
-                mode: moduleName,
-                $domElement: $moduleElement,
-                parameters: {
-                    playerName: $moduleElement.selectValuableAttribute($.aligulac.selectModuleByName(moduleName).aliasesAttribute),
-                    showFlag: true,
-                    showRace: true,
-                    showTeam: true,
-                    showPopup: false
-                }
-            });
+        load: function (obj) {
+                    var $moduleElement = obj.clone();
+                    $.aligulac.runModule({
+                        mode: moduleName,
+                        $domElement: $moduleElement,
+                        parameters: {
+                            playerName: $moduleElement.selectValuableAttribute($.aligulac.selectModuleByName(moduleName).aliasesAttribute),
+                            showFlag: true,
+                            showRace: true,
+                            showTeam: true,
+                            showPopup: false
+                        },
+                        compareParams: function() {
+                            return this.parameters.playerName;
+                        }
+                    });
         }
     });
 //module realization
-    var getPlayerLinkByName = function(params) {
-        if (params.parameters.playerName) {
-            var domElement = params.$domElement;
+    var getPlayerLinkByName = function (params) {
+        var deferred = $.Deferred();
             $.ajax({
                 type: "GET",
                 url: aligulacConfig.aligulacApiRoot +
@@ -55,10 +63,13 @@ $(document).ready(function () {
                     tag__iexact: params.parameters.playerName,
                     apikey: aligulacConfig.apiKey
                 },
-            }).success(function(ajaxData) {
+            }).success(function (ajaxData) {
                 params.parameters.playerId = ajaxData.objects[0].id;
-                domElement.aligulac.extentions.playerLink(params, ajaxData.objects[0]);
+                params.$domElement.aligulac.extentions.playerLink(params, ajaxData.objects[0], params.$domElement);
+                deferred.resolve({
+                        result: params.$domElement.html()
+                });
             });
-        }
+        return deferred;
     };
 });

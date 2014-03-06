@@ -18,10 +18,10 @@ $(document).ready(function () {
             }
         ],
         logic: function (params) {
-            getPredictMatchByIds(params);
+            return getPredictMatchByIds(params);
         },
-        load: function () {
-            var $moduleElement = $($.aligulac.generateAttributeSelector(moduleName)).clone();
+        load: function (obj) {
+            var $moduleElement = obj.clone();
             var pmparams = $moduleElement
                 .selectValuableAttribute($.aligulac.selectModuleByName(moduleName).aliasesAttribute)
                 .split(',');
@@ -32,6 +32,9 @@ $(document).ready(function () {
                     player1: pmparams[0],
                     player2: pmparams[1],
                     bo: pmparams[2]
+                },
+                compareParams: function () {
+                    return this.parameters.player1 + ',' + this.parameters.player2 + ',' + this.parameters.bo;
                 }
             });
         },
@@ -46,7 +49,8 @@ $(document).ready(function () {
     });
     //module realization
     var getPredictMatchByIds = function (params) {
-        if ((params.parameters.player1name) && (params.parameters.player2name)) {
+        var deferred = $.Deferred();
+        if ((params.parameters.player1) && (params.parameters.player2)) {
             $.ajax({
                 type: "GET",
                 url: aligulacConfig.aligulacApiRoot +
@@ -60,25 +64,27 @@ $(document).ready(function () {
                     bo: params.parameters.bo
                 },
             }).success(function (ajaxData) {
-                $(this).aligulac.extentions.predictMatchTable(params, ajaxData);
+                $(this).aligulac.extentions.predictMatchTable(params, ajaxData, params.$domElement);
+                deferred.resolve({ result: params.$domElement.html() });
             });
         }
+        return deferred;
     };
 
-    $.fn.aligulac.extentions.predictMatchTable = function (params, ajaxData) {
-        var domElement = params.$domElement;
-        var markup = selectModuleByName(moduleName);
+    $.fn.aligulac.extentions.predictMatchTable = function (params, ajaxData, _self) {
+        var domElement = _self;
+        var markup = $.aligulac.selectModuleByName(moduleName).markup;
         ajaxData.pla.id = params.parameters.player1;
         ajaxData.plb.id = params.parameters.player2;
         domElement.html(markup.predictMatch);
-        domElement.find('.player1').playerLink({
+        domElement.find('.player1').aligulac.extentions.playerLink({
             mode: 'player-link-by-id',
-            parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false }
-        }, ajaxData.pla);
-        domElement.find('.player2').playerLink({
+            parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false, playerId: ajaxData.pla.id }
+        }, ajaxData.pla, domElement.find('.player1'));
+        domElement.find('.player2').aligulac.extentions.playerLink({
             mode: 'player-link-by-id',
-            parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false }
-        }, ajaxData.plb);
+            parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false, playerId: ajaxData.plb.id }
+        }, ajaxData.plb, domElement.find('.player2'));
 
         var aligulacResult = domElement.html();
 

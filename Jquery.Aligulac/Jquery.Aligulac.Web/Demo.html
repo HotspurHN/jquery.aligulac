@@ -2,27 +2,44 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
-	<link href="Content/css/css.css" rel="stylesheet" />
-	<link href="Content/css/jquery.aligulac.css" rel="stylesheet" />
-	<link href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" />
-	<script src="Scripts/jquery-2.0.3.min.js"></script>
-	<script src="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.js"></script>
-	<script src="Scripts/jquery.aligulac/jquery.aligulac.config.js"></script>
-	<script src="Scripts/jquery.aligulac/jquery.aligulac.js"></script>
-	<script src="Scripts/jquery.aligulac/modules/player-link-by-id/module.js"></script>
-	<script src="Scripts/jquery.aligulac/modules/player-link-by-name/module.js"></script>
-	<script src="Scripts/jquery.aligulac/modules/predict-match-by-player-id/module.js"></script>
-	<script src="Scripts/jquery.aligulac/modules/predict-match-by-player-name/module.js"></script>
-	<script src="Scripts/jquery.aligulac/modules/event-results/module.js"></script>
+    <link href="Content/css/css.css" rel="stylesheet" />
+    <link href="Content/css/jquery.aligulac.css" rel="stylesheet" />
+    <link href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" />
+    <script src="Scripts/jquery-2.0.3.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.js"></script>
+    <script src="https://my-web-js.googlecode.com/files/jquery.tmpl.min.js"></script>
+    <script src="Scripts/jquery.aligulac/jquery.aligulac.config.js"></script>
+    <script src="Scripts/jquery.aligulac/jquery.aligulac.js"></script>
+    <script src="Scripts/jquery.aligulac/modules/player-link-by-id/module.js"></script>
+    <script src="Scripts/jquery.aligulac/modules/player-link-by-name/module.js"></script>
+    <script src="Scripts/jquery.aligulac/modules/predict-match-by-player-id/module.js"></script>
+    <script src="Scripts/jquery.aligulac/modules/predict-match-by-player-name/module.js"></script>
+    <script src="Scripts/jquery.aligulac/modules/event-results/module.js"></script>
     <script src="Scripts/jquery.aligulac/modules/follow-player/module.js"></script>
 
 </head>
-	<body>
-		<script>
-		    $(document).ready(function () {
-				$.aligulacjq();
-			});
-		</script>
-		<div data-afp="go4sc2 Cup Europe Finals 2014 January,dana"></div>
-	</body>
+<body>
+    <style>
+        body>div {
+            float: left;
+            width: 300px;
+            border: 1px solid black;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $.aligulacjq();
+        });
+    </script>
+    <div data-apid="1234"></div>
+    <div data-apid="24"></div>
+    <div data-apn="Grubby"></div>
+    <div data-apn="Zest"></div>
+    <div data-afp="WCS 2014 Season 1 Korea Code S,Zest"></div>
+    <div data-afp="WCS 2014 Season 1 Korea Code S,Maru"></div>
+    <div data-aer="WCS 2014 Season 1 Korea Code S"></div>
+    <div data-apmi="24,1234,5"></div>
+    <div data-apmi="22,1234,5"></div>
+    <div data-apmn="Hotspur,Votan,5"></div>
+</body>
 </html>

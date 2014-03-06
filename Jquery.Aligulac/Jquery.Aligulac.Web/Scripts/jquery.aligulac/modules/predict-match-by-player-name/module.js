@@ -14,10 +14,10 @@ $(document).ready(function () {
         aliasesAttribute: ["data-apmn", "data-aligulac-predict-match-by-name"],
         parameters: [{bo: 3}],
         logic: function(params) {
-            getPredictMatchByNames(params);
+            return getPredictMatchByNames(params);
         },
-        load: function () {
-            var $moduleElement = $($.aligulac.generateAttributeSelector(moduleName)).clone();
+        load: function (obj) {
+            var $moduleElement = obj.clone();
             var pmparams = $moduleElement.selectValuableAttribute($.aligulac.selectModuleByName(moduleName).aliasesAttribute)
                 .split(',');
             $.aligulac.runModule({
@@ -27,12 +27,16 @@ $(document).ready(function () {
                     player1name: pmparams[0],
                     player2name: pmparams[1],
                     bo: pmparams[2]
+                },
+                compareParams: function() {
+                    return this.parameters.player1name + ',' + this.parameters.player2name + ',' + this.parameters.bo;
                 }
             });
         }
     });
 //module realization
-    var getPredictMatchByNames = function(params) {
+    var getPredictMatchByNames = function (params) {
+        var deferred = $.Deferred();
         var domElement = params.$domElement;
         if ((params.parameters.player1name) && (params.parameters.player2name)) {
             $.ajax({
@@ -46,7 +50,7 @@ $(document).ready(function () {
                     tag__iexact: params.parameters.player1name,
                     apikey: aligulacConfig.apiKey
                 },
-            }).done(function(ajaxData) {
+            }).success(function (ajaxData) {
                 params.parameters.player1 = ajaxData.objects[0].id;
                 $.ajax({
                     type: "GET",
@@ -73,11 +77,13 @@ $(document).ready(function () {
                             apikey: aligulacConfig.apiKey,
                             bo: params.parameters.bo
                         },
-                    }).done(function(ajaxData3) {
-                        domElement.aligulac.extentions.predictMatchTable(params, ajaxData3);
+                    }).success(function (ajaxData3) {
+                        domElement.aligulac.extentions.predictMatchTable(params, ajaxData3, domElement);
+                        deferred.resolve({ result: domElement .html()});
                     });
                 });
             });
         }
+        return deferred;
     };
 });
