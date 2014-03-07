@@ -10,9 +10,9 @@ $(document).ready(function () {
     if (window.$) {
         //modules construction functions
         $.aligulac = {};
-        $.aligulac.extentions = {};
+        $.aligulac.extensions = {};
         $.fn.aligulac = {};
-        $.fn.aligulac.extentions = {};
+        $.fn.aligulac.extensions = {};
         $.aligulac.modules = [];
         $.aligulac.registerModule = function (moduleObject) {
             $.aligulac.modules.push(moduleObject);
@@ -23,7 +23,7 @@ $(document).ready(function () {
             for (var i = 0; i < module.aliasesAttribute.length; i++) {
                 selector += '[' + module.aliasesAttribute[i] + ']';
                 if (i !== module.aliasesAttribute.length - 1) {
-                    selector += ",";
+                    selector += ',';
                 }
             }
             return selector;
@@ -78,20 +78,20 @@ $(document).ready(function () {
         $.aligulac.getFullRaceName = function (raceSymbol) {
             var raceName = '';
             switch (raceSymbol) {
-                case "Z":
-                    raceName = "Zerg";
+                case 'Z':
+                    raceName = 'Zerg';
                     break;
-                case "P":
-                    raceName = "Protoss";
+                case 'P':
+                    raceName = 'Protoss';
                     break;
-                case "T":
-                    raceName = "Terran";
+                case 'T':
+                    raceName = 'Terran';
                     break;
-                case "R":
-                    raceName = "Random";
+                case 'R':
+                    raceName = 'Random';
                     break;
-                case "S":
-                    raceName = "Switcher";
+                case 'S':
+                    raceName = 'Switcher';
                     break;
             }
             return raceName;
@@ -112,7 +112,7 @@ $(document).ready(function () {
         };
 
         $.aligulac.getCachedDOM = function (key) {
-            if ((typeof (Storage) !== "undefined") && (localStorage[key])) {
+            if ((typeof (Storage) !== 'undefined') && (localStorage[key])) {
                 return localStorage.getItem(key);
             } else {
                 return '<img class="aligulac-ajax-loading" src="{aligulac-ajaxLoading}" alt="ajax" />'
@@ -120,7 +120,7 @@ $(document).ready(function () {
             }
         };
         $.aligulac.saveCachedDOM = function (key, DOM) {
-            if (typeof (Storage) !== "undefined") {
+            if (typeof (Storage) !== 'undefined') {
                 localStorage.setItem(key, DOM);
             }
         };
@@ -141,6 +141,6 @@ $(document).ready(function () {
 
 
     } else {
-        console.log("jQuery not loaded.");
+        console.log('jQuery not loaded.');
     }
 });

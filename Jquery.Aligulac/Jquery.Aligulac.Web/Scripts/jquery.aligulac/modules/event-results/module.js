@@ -9,7 +9,7 @@ $(document).ready(function () {
     $.aligulac.registerModule(
     {
         moduleName: moduleName,
-        aliasesAttribute: ["data-aligulac-event-results", "data-aer"],
+        aliasesAttribute: ['data-aligulac-event-results', 'data-aer'],
         parameters: {
 
         },
@@ -34,27 +34,27 @@ $(document).ready(function () {
             });
         },
         markup: {
-            results: "<table class='aligulac-event-result-table aligulac-event-num-{event-num}'><tr><td colspan='5' class='aligulac-event-name'>{aligulac-event-name}</td></tr><tr><td>{aligulac-scores-match}</td></tr></table>",
-            scores: "<tr class='{aligulac-match-id}'><td>{aligulac-match-date}</td><td>{aligulac-player1-link}</td><td>{aligulac-score1}</td><td>{aligulac-score2}</td><td>{aligulac-player2-link}</td></tr>",
-            scoresTableHeader: "<tr><th>Date</th><th>Player 1</th><th></th><th></th><th>Player 2</th></tr>"
+            results: '<table class="aligulac-event-result-table aligulac-event-num-{event-num}"><tr><td colspan="5" class="aligulac-event-name">{aligulac-event-name}</td></tr><tr><td>{aligulac-scores-match}</td></tr></table>',
+            scores: '<tr class="{aligulac-match-id}"><td>{aligulac-match-date}</td><td>{aligulac-player1-link}</td><td>{aligulac-score1}</td><td>{aligulac-score2}</td><td>{aligulac-player2-link}</td></tr>',
+            scoresTableHeader: '<tr><th>Date</th><th>Player 1</th><th></th><th></th><th>Player 2</th></tr>'
         }
     });
 
     //module realization
     var getEventResults = function (params) {
         $.ajax({
-            type: "GET",
+            type: 'GET',
             url: aligulacConfig.aligulacApiRoot +
                 'event/' +
                 '?callback=?',
-            dataType: "json",
+            dataType: 'json',
             data:
             {
                 fullname__iexact: params.parameters.eventName,
                 apikey: aligulacConfig.apiKey
             },
         }).success(function (ajaxData) {
-            params.$domElement.html("");
+            params.$domElement.html('');
             drawEventsTable({
                 eventId: ajaxData.objects[0].id,
                 eventName: ajaxData.objects[0].fullname,
@@ -79,11 +79,11 @@ $(document).ready(function () {
         for (var i = 0; i < params.length; i++) {
             var fun = function (paramsI) {
                 return $.ajax({
-                    type: "GET",
+                    type: 'GET',
                     url: aligulacConfig.aligulacApiRoot +
                         'event/' + params[i].eventId +
                         '?callback=?',
-                    dataType: "json",
+                    dataType: 'json',
                     data:
                     {
                         apikey: aligulacConfig.apiKey
@@ -118,11 +118,11 @@ $(document).ready(function () {
     var getAllMatchesForEvent = function (ajaxData) {
         var deferred = $.Deferred();
         $.ajax({
-            type: "GET",
+            type: 'GET',
             url: aligulacConfig.aligulacApiRoot +
                 'match/' +
                 '?callback=?',
-            dataType: "json",
+            dataType: 'json',
             data:
             {
                 apikey: aligulacConfig.apiKey,
@@ -134,18 +134,18 @@ $(document).ready(function () {
                     result.filtredPlayers.push(result.objects[r]);
             }
             if (result.filtredPlayers.length === 0) {
-                ajaxData.$domElement.find(".aligulac-event-num-" + ajaxData.id).remove();
+                ajaxData.$domElement.find('.aligulac-event-num-' + ajaxData.id).remove();
             } else {
-                ajaxData.$domElement.find(".aligulac-event-num-" + ajaxData.id).html(
-                    ajaxData.$domElement.find(".aligulac-event-num-" + ajaxData.id).html().
-                    replace("<tr><td>{aligulac-scores-match}</td></tr>", drawMatchesForEvent(result.filtredPlayers)));
+                ajaxData.$domElement.find('.aligulac-event-num-' + ajaxData.id).html(
+                    ajaxData.$domElement.find('.aligulac-event-num-' + ajaxData.id).html().
+                    replace('<tr><td>{aligulac-scores-match}</td></tr>', drawMatchesForEvent(result.filtredPlayers)));
             }
             var childrenArray = [];
             if (ajaxData.children.length > 0) {
                 for (var i = 0; i < ajaxData.children.length; i++) {
                     childrenArray.push(
                     {
-                        eventId: ajaxData.children[i].replace(new RegExp("/api/v1/event/([0-9]*)/"), "$1"),
+                        eventId: ajaxData.children[i].replace(new RegExp('/api/v1/event/([0-9]*)/'), '$1'),
                         $domElement: ajaxData.$domElement,
                         params: ajaxData.params,
                         obj: ajaxData
@@ -167,28 +167,28 @@ $(document).ready(function () {
     var drawMatchesForEvent = function (ajaxData) {
         var objects = ajaxData;
         var markups = $.aligulac.selectModuleByName(moduleName).markup;
-        var matches = "";
+        var matches = '';
         if (objects.length > 0) {
             matches += markups.scoresTableHeader;
         }
         for (var i = 0; i < objects.length; i++) {
-            matches += markups.scores.replace("{aligulac-match-date}", objects[i].date)
-                .replace("{aligulac-player1-link}", $.aligulac.extentions.getPlayerLinkResult({
-                    mode: "player-link-by-id",
+            matches += markups.scores.replace('{aligulac-match-date}', objects[i].date)
+                .replace('{aligulac-player1-link}', $.aligulac.extensions.getPlayerLinkResult({
+                    mode: 'player-link-by-id',
                     parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false, playerId: objects[i].pla.id }
                 }, objects[i].pla))
-                .replace("{aligulac-player2-link}", $.aligulac.extentions.getPlayerLinkResult({
-                    mode: "player-link-by-id",
+                .replace('{aligulac-player2-link}', $.aligulac.extensions.getPlayerLinkResult({
+                    mode: 'player-link-by-id',
                     parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false, playerId: objects[i].plb.id }
                 }, objects[i].plb))
-                .replace("{aligulac-score1}", objects[i].sca)
-                .replace("{aligulac-score2}", objects[i].scb);
+                .replace('{aligulac-score1}', objects[i].sca)
+                .replace('{aligulac-score2}', objects[i].scb);
         }
         return matches;
     };
 
     var drawEventsTable = function (drawTableParams) {
         var markup = $.aligulac.selectModuleByName(moduleName).markup;
-        drawTableParams.$domElement.append(markup.results.replace("{event-num}", drawTableParams.eventId).replace("{aligulac-event-name}", drawTableParams.eventName));
+        drawTableParams.$domElement.append(markup.results.replace('{event-num}', drawTableParams.eventId).replace('{aligulac-event-name}', drawTableParams.eventName));
     };
 });

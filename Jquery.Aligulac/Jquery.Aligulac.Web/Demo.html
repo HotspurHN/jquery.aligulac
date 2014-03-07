@@ -5,9 +5,11 @@
     <link href="Content/css/css.css" rel="stylesheet" />
     <link href="Content/css/jquery.aligulac.css" rel="stylesheet" />
     <link href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" />
+    <link href="https://code.jquery.com/ui/1.9.2/themes/hot-sneaks/jquery-ui.css" rel="stylesheet" />
     <script src="Scripts/jquery-2.0.3.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
     <script src="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.js"></script>
-    <script src="https://my-web-js.googlecode.com/files/jquery.tmpl.min.js"></script>
+
     <script src="Scripts/jquery.aligulac/jquery.aligulac.config.js"></script>
     <script src="Scripts/jquery.aligulac/jquery.aligulac.js"></script>
     <script src="Scripts/jquery.aligulac/modules/player-link-by-id/module.js"></script>
@@ -16,12 +18,12 @@
     <script src="Scripts/jquery.aligulac/modules/predict-match-by-player-name/module.js"></script>
     <script src="Scripts/jquery.aligulac/modules/event-results/module.js"></script>
     <script src="Scripts/jquery.aligulac/modules/follow-player/module.js"></script>
+    <script src="Scripts/jquery.aligulac/modules/autocomplete/module.js"></script>
 
 </head>
 <body>
     <style>
         body>div {
-            float: left;
             width: 300px;
             border: 1px solid black;
         }
@@ -29,17 +31,31 @@
     <script>
         $(document).ready(function () {
             $.aligulacjq();
+            $(".but").click(function() {
+                $('.follow').aligulacjq({
+                    mode: 'aligulac-follow-player',
+                    $domElement: $('.follow'),
+                    parameters:
+                    {
+                        eventName: $('#event').val(),
+                        playerName: $('#player').val()
+                    },
+                    compareParams: function () {
+                        return this.parameters.eventName + ',' + this.parameters.playerName;
+                    }
+                });
+            });
         });
     </script>
-    <div data-apid="1234"></div>
-    <div data-apid="24"></div>
-    <div data-apn="Grubby"></div>
-    <div data-apn="Zest"></div>
-    <div data-afp="WCS 2014 Season 1 Korea Code S,Zest"></div>
-    <div data-afp="WCS 2014 Season 1 Korea Code S,Maru"></div>
-    <div data-aer="WCS 2014 Season 1 Korea Code S"></div>
-    <div data-apmi="24,1234,5"></div>
-    <div data-apmi="22,1234,5"></div>
-    <div data-apmn="Hotspur,Votan,5"></div>
+    Select player:
+    <div data-aac="player,player,tag"></div>
+    <br/>
+    Select event:
+    <div data-aac="event,event,fullname"></div>
+    <br/>
+    <input type="button" class="but" value="Follow player" />
+    <br/>
+    Selected player results:
+    <div class="follow"></div>
 </body>
 </html>

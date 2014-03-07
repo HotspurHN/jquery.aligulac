@@ -7,11 +7,11 @@
 
 // module initialization
 $(document).ready(function () {
-    var moduleName = "predict-match-by-player-name";
+    var moduleName = 'predict-match-by-player-name';
     $.aligulac.registerModule(
     {
         moduleName: moduleName,
-        aliasesAttribute: ["data-apmn", "data-aligulac-predict-match-by-name"],
+        aliasesAttribute: ['data-apmn', 'data-aligulac-predict-match-by-name'],
         parameters: [{bo: 3}],
         logic: function(params) {
             return getPredictMatchByNames(params);
@@ -40,11 +40,11 @@ $(document).ready(function () {
         var domElement = params.$domElement;
         if ((params.parameters.player1name) && (params.parameters.player2name)) {
             $.ajax({
-                type: "GET",
+                type: 'GET',
                 url: aligulacConfig.aligulacApiRoot +
                     'player/' +
                     '?callback=?',
-                dataType: "json",
+                dataType: 'json',
                 data:
                 {
                     tag__iexact: params.parameters.player1name,
@@ -53,11 +53,11 @@ $(document).ready(function () {
             }).success(function (ajaxData) {
                 params.parameters.player1 = ajaxData.objects[0].id;
                 $.ajax({
-                    type: "GET",
+                    type: 'GET',
                     url: aligulacConfig.aligulacApiRoot +
                         'player/' +
                         '?callback=?',
-                    dataType: "json",
+                    dataType: 'json',
                     data:
                     {
                         tag__iexact: params.parameters.player2name,
@@ -66,19 +66,19 @@ $(document).ready(function () {
                 }).success(function(ajaxData2) {
                     params.parameters.player2 = ajaxData2.objects[0].id;
                     $.ajax({
-                        type: "GET",
+                        type: 'GET',
                         url: aligulacConfig.aligulacApiRoot +
                             'predictmatch/' +
                             params.parameters.player1 + ',' + params.parameters.player2 +
                             '/?callback=?',
-                        dataType: "json",
+                        dataType: 'json',
                         data:
                         {
                             apikey: aligulacConfig.apiKey,
                             bo: params.parameters.bo
                         },
                     }).success(function (ajaxData3) {
-                        domElement.aligulac.extentions.predictMatchTable(params, ajaxData3, domElement);
+                        domElement.aligulac.extensions.predictMatchTable(params, ajaxData3, domElement);
                         deferred.resolve({ result: domElement .html()});
                     });
                 });

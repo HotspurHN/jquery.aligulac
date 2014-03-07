@@ -65,7 +65,7 @@ $(document).ready(function () {
                 },
             }).success(function (ajaxData) {
                 params.parameters.playerId = ajaxData.objects[0].id;
-                params.$domElement.aligulac.extentions.playerLink(params, ajaxData.objects[0], params.$domElement);
+                params.$domElement.aligulac.extensions.playerLink(params, ajaxData.objects[0], params.$domElement);
                 deferred.resolve({
                         result: params.$domElement.html()
                 });

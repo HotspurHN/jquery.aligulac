@@ -61,6 +61,7 @@
     <Content Include="Content\css\images\ajax-loader.gif" />
     <Content Include="Content\css\jquery.aligulac.css" />
     <Content Include="Demo.html" />
+    <Content Include="Scripts\jquery.aligulac\modules\autocomplete\module.js" />
     <Content Include="Scripts\jquery.aligulac\modules\event-results\module.js" />
     <Content Include="Scripts\jquery.aligulac\modules\player-link-by-id\module.js" />
     <Content Include="Scripts\jquery.aligulac\modules\player-link-by-name\module.js" />

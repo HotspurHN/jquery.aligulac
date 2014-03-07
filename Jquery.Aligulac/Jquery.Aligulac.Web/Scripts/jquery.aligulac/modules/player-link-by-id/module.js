@@ -9,11 +9,11 @@
 
 // module initialization
 $(document).ready(function () {
-    var moduleName = "player-link-by-id";
+    var moduleName = 'player-link-by-id';
     $.aligulac.registerModule(
     {
         moduleName: moduleName,
-        aliasesAttribute: ["data-aligulac-player-id", "data-apid"],
+        aliasesAttribute: ['data-aligulac-player-id', 'data-apid'],
         parameters: [
             {
                 showFlag: true,
@@ -44,37 +44,37 @@ $(document).ready(function () {
         },
         markup:
         {
-            playerLink: "{flag-image}{race-image}{team-link}<a target='_blank' href='{aligulac-player-link}' class='aligulac-player-link'>{aligulac-player-name}</a>",
-            playerFlag: "<img src='{aligulac-player-flag-image}' alt='{aligulac-player-flag-name}' />",
-            playerRace: "<img src='{aligulac-player-race-image}' alt='{aligulac-player-race-name}' />",
-            teamLink: "<a href='{aligulact-team-url}' class='aligulac-team-link'>{aligulac-team-name}</a>.",
-            playerPopup: "<div class='aligulac-popup-content'>" +
-                "<ul><li class='aligulac-popup-header'>{aligulac-player-name}</li>" +
-                "<li><strong>Race:</strong> {race-image} {aligulac-player-race-name}</li>" +
-                "<li><strong>Country:</strong> {flag-image} {aligulac-player-flag-name}</li>" +
-                "<li><strong>Full name:</strong>{aligulac-player-full-name}</li>" +
-                "<li><strong>Aka:</strong>{aligulac-player-akas}</li>" +
-                "<li><strong>Birthday:</strong>{aligulac-player-birthday}</li>" +
-                "<li><strong>Team:</strong>{aligulac-team-name}</li>" +
-                "</ul></div>"
+            playerLink: '{flag-image}{race-image}{team-link}<a target="_blank" href="{aligulac-player-link}" class="aligulac-player-link">{aligulac-player-name}</a>',
+            playerFlag: '<img src="{aligulac-player-flag-image}" alt="{aligulac-player-flag-name}" />',
+            playerRace: '<img src="{aligulac-player-race-image}" alt="{aligulac-player-race-name}" />',
+            teamLink: '<a href="{aligulact-team-url}" class="aligulac-team-link">{aligulac-team-name}</a>.',
+            playerPopup: '<div class="aligulac-popup-content">' +
+                '<ul><li class="aligulac-popup-header">{aligulac-player-name}</li>' +
+                '<li><strong>Race:</strong> {race-image} {aligulac-player-race-name}</li>' +
+                '<li><strong>Country:</strong> {flag-image} {aligulac-player-flag-name}</li>' +
+                '<li><strong>Full name:</strong>{aligulac-player-full-name}</li>' +
+                '<li><strong>Aka:</strong>{aligulac-player-akas}</li>' +
+                '<li><strong>Birthday:</strong>{aligulac-player-birthday}</li>' +
+                '<li><strong>Team:</strong>{aligulac-team-name}</li>' +
+                '</ul></div>'
         }
     });
     //module realization
     var getPlayerLinkById = function (params) {
         var deferred = $.Deferred();
         $.ajax({
-            type: "GET",
+            type: 'GET',
             url: aligulacConfig.aligulacApiRoot +
                 'player/' +
                 params.parameters.playerId +
                 '?callback=?',
-            dataType: "json",
+            dataType: 'json',
             data:
             {
                 apikey: aligulacConfig.apiKey
             },
         }).success(function (ajaxData) {
-            $.when(params.$domElement.aligulac.extentions.playerLink(params, ajaxData, params.$domElement)).then(
+            $.when(params.$domElement.aligulac.extensions.playerLink(params, ajaxData, params.$domElement)).then(
                 function () {
                     deferred.resolve({ result: params.$domElement.html() });
                 }
@@ -118,12 +118,12 @@ $(document).ready(function () {
             .replace('{aligulac-player-name}', ajaxData.tag);
     };
 
-    //extentions
-    $.aligulac.extentions.getPlayerLinkResult = function(params, ajaxData) {
+    //extensions
+    $.aligulac.extensions.getPlayerLinkResult = function(params, ajaxData) {
          return getPlayerLinkResult(params, ajaxData);
     };
 
-    $.fn.aligulac.extentions.playerLink = function (params, ajaxData, _self) {
+    $.fn.aligulac.extensions.playerLink = function (params, ajaxData, _self) {
         if (params.parameters.playerId) {
             var domElement = _self;
             var aligulacResult = getPlayerLinkResult(params, ajaxData);

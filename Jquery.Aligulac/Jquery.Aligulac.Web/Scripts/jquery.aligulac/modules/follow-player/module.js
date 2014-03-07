@@ -148,6 +148,7 @@ $(document).ready(function () {
                     replace("<tr><td>{aligulac-scores-match}</td></tr>", drawMatchesForEvent(result.filtredPlayers)));
             }
             var childrenArray = [];
+            debugger;
             if (ajaxData.children.length > 0) {
                 for (var i = 0; i < ajaxData.children.length; i++) {
                     childrenArray.push(
@@ -180,11 +181,11 @@ $(document).ready(function () {
         }
         for (var i = 0; i < objects.length; i++) {
             matches += markups.scores.replace("{aligulac-match-date}", objects[i].date)
-                .replace("{aligulac-player1-link}", $.aligulac.extentions.getPlayerLinkResult({
+                .replace("{aligulac-player1-link}", $.aligulac.extensions.getPlayerLinkResult({
                     mode: "player-link-by-id",
                     parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false, playerId: objects[i].pla.id }
                 }, objects[i].pla))
-                .replace("{aligulac-player2-link}", $.aligulac.extentions.getPlayerLinkResult({
+                .replace("{aligulac-player2-link}", $.aligulac.extensions.getPlayerLinkResult({
                     mode: "player-link-by-id",
                     parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false, playerId: objects[i].plb.id }
                 }, objects[i].plb))

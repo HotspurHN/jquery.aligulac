@@ -7,11 +7,11 @@
 
 // module initialization
 $(document).ready(function () {
-    var moduleName = "predict-match-by-player-id";
+    var moduleName = 'predict-match-by-player-id';
     $.aligulac.registerModule(
     {
         moduleName: moduleName,
-        aliasesAttribute: ["data-apmi", "data-aligulac-predict-match-by-id"],
+        aliasesAttribute: ['data-apmi', 'data-aligulac-predict-match-by-id'],
         parameters: [
             {
                 bo: 3
@@ -40,11 +40,11 @@ $(document).ready(function () {
         },
         markup:
         {
-            predictMatch: "<div class='predict-match-score'><div class='col1 player1'></div>" +
-                "<div class='col2 player2'></div>{score-predictions}" +
-                "<div class='col1 score-summary'>{aligulac-score-summary-prediction1}%</div>" +
-                "<div class='col2 score-summary'>{aligulac-score-summary-prediction2}%</div></div>",
-            scorePredictionLine: "<div class='col1'>{aligulac-percent1}% {aligulac-score1}</div><div class='col2'>{aligulac-score2} {aligulac-percent2}%</div>"
+            predictMatch: '<div class="predict-match-score"><div class="col1 player1"></div>' +
+                '<div class="col2 player2"></div>{score-predictions}' +
+                '<div class="col1 score-summary">{aligulac-score-summary-prediction1}%</div>' +
+                '<div class="col2 score-summary">{aligulac-score-summary-prediction2}%</div></div>',
+            scorePredictionLine: '<div class="col1">{aligulac-percent1}% {aligulac-score1}</div><div class="col2">{aligulac-score2} {aligulac-percent2}%</div>'
         }
     });
     //module realization
@@ -52,36 +52,36 @@ $(document).ready(function () {
         var deferred = $.Deferred();
         if ((params.parameters.player1) && (params.parameters.player2)) {
             $.ajax({
-                type: "GET",
+                type: 'GET',
                 url: aligulacConfig.aligulacApiRoot +
                     'predictmatch/' +
                     params.parameters.player1 + ',' + params.parameters.player2 +
                     '/?callback=?',
-                dataType: "json",
+                dataType: 'json',
                 data:
                 {
                     apikey: aligulacConfig.apiKey,
                     bo: params.parameters.bo
                 },
             }).success(function (ajaxData) {
-                $(this).aligulac.extentions.predictMatchTable(params, ajaxData, params.$domElement);
+                $(this).aligulac.extensions.predictMatchTable(params, ajaxData, params.$domElement);
                 deferred.resolve({ result: params.$domElement.html() });
             });
         }
         return deferred;
     };
 
-    $.fn.aligulac.extentions.predictMatchTable = function (params, ajaxData, _self) {
+    $.fn.aligulac.extensions.predictMatchTable = function (params, ajaxData, _self) {
         var domElement = _self;
         var markup = $.aligulac.selectModuleByName(moduleName).markup;
         ajaxData.pla.id = params.parameters.player1;
         ajaxData.plb.id = params.parameters.player2;
         domElement.html(markup.predictMatch);
-        domElement.find('.player1').aligulac.extentions.playerLink({
+        domElement.find('.player1').aligulac.extensions.playerLink({
             mode: 'player-link-by-id',
             parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false, playerId: ajaxData.pla.id }
         }, ajaxData.pla, domElement.find('.player1'));
-        domElement.find('.player2').aligulac.extentions.playerLink({
+        domElement.find('.player2').aligulac.extensions.playerLink({
             mode: 'player-link-by-id',
             parameters: { showFlag: true, showRace: true, showTeam: false, showPopup: false, playerId: ajaxData.plb.id }
         }, ajaxData.plb, domElement.find('.player2'));
